@@ -73,6 +73,8 @@
             position: relative; 
             z-index: 999;
             flex: 1;
+            /* Added transition for a smoother 'run away' effect */
+            transition: left 0.2s ease, top 0.2s ease;
         }
 
         .address-form {
@@ -119,7 +121,7 @@
             <h1 id="question">Will you please take your Eidi from me? 🎁✨</h1>
             <div class="buttons">
                 <button id="yesBtn" onclick="showForm()">Yes, I'm taking it! 😍</button>
-                <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No 😔</button>
+                <button id="noBtn" onmouseover="moveButton(event)" ontouchstart="moveButton(event)">No 😔</button>
             </div>
         </div>
 
@@ -141,7 +143,12 @@
     </div>
 
     <script>
-        function moveButton() {
+        function moveButton(event) {
+            // This prevents the 'click' event from firing after the touch
+            if (event && event.type === 'touchstart') {
+                event.preventDefault();
+            }
+
             const noBtn = document.getElementById('noBtn');
             const question = document.getElementById('question');
             question.innerHTML = "Please? Just for me! 🥺🤲";
@@ -152,11 +159,13 @@
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
             
-            const maxX = window.innerWidth - btnWidth - 20;
-            const maxY = window.innerHeight - btnHeight - 20;
+            // Padding to ensure button stays away from the very edges
+            const padding = 20;
+            const maxX = window.innerWidth - btnWidth - padding;
+            const maxY = window.innerHeight - btnHeight - padding;
 
-            const randomX = Math.max(20, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
@@ -177,7 +186,6 @@
             const addr = document.getElementById('userAddress').value.trim();
             const treat = document.getElementById('userTreat').value.trim();
 
-            // CHECK IF ALL FIELDS ARE FILLED
             if (!name || !addr || !treat) {
                 alert("All fields are required! Please don't leave anything blank 💜");
                 return;
