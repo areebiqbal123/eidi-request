@@ -1,190 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Special Request For Eidi 🌙</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* Removes the blue flash on mobile */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Special Request For Eidi 🌙</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f3e5f5; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            width: 100vw;
-            touch-action: none; /* Prevents zooming/scrolling which interferes with button movement */
-        }
+<style>
 
-        .container {
-            text-align: center;
-            background: white;
-            padding: 30px 20px;
-            border-radius: 25px;
-            box-shadow: 0 10px 25px rgba(123, 31, 162, 0.2);
-            width: 85%;
-            max-width: 400px;
-            position: relative;
-            z-index: 10;
-        }
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
 
-        h1 { color: #7b1fa2; margin-bottom: 20px; font-size: 1.5rem; }
+body{
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+background:#f3e5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+overflow:hidden;
+width:100vw;
+touch-action:none;
+}
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 10px;
-            min-height: 60px;
-        }
+.container{
+text-align:center;
+background:white;
+padding:30px 20px;
+border-radius:25px;
+box-shadow:0 10px 25px rgba(123,31,162,0.2);
+width:85%;
+max-width:400px;
+position:relative;
+z-index:10;
+}
 
-        button {
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-        }
+h1{
+color:#7b1fa2;
+margin-bottom:20px;
+font-size:1.5rem;
+}
 
-        #yesBtn {
-            background-color: #9c27b0;
-            color: white;
-            flex: 1;
-            touch-action: auto;
-        }
+.buttons{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-top:10px;
+min-height:60px;
+}
 
-        #noBtn {
-            background-color: #9575cd;
-            color: white;
-            flex: 1;
-            z-index: 9999;
-            transition: 0.1s ease-out;
-            will-change: transform;
-            user-select: none;
-        }
+button{
+padding:12px 20px;
+font-size:14px;
+font-weight:bold;
+border:none;
+border-radius:50px;
+cursor:pointer;
+}
 
-        .address-form {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 15px;
-            text-align: left;
-        }
+#yesBtn{
+background:#9c27b0;
+color:white;
+flex:1;
+touch-action:auto;
+}
 
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1bee7;
-            border-radius: 10px;
-            font-size: 16px;
-            touch-action: auto;
-        }
+#noBtn{
+background:#9575cd;
+color:white;
+flex:1;
+z-index:9999;
+transition:0.15s ease-out;
+will-change:transform;
+user-select:none;
+position:relative;
+}
 
-        .submit-btn { background-color: #6a1b9a; color: white; width: 100%; margin-top: 10px;}
-    </style>
+.address-form{
+display:none;
+flex-direction:column;
+gap:12px;
+margin-top:15px;
+text-align:left;
+}
+
+input{
+width:100%;
+padding:12px;
+border:2px solid #e1bee7;
+border-radius:10px;
+font-size:16px;
+touch-action:auto;
+}
+
+.submit-btn{
+background:#6a1b9a;
+color:white;
+width:100%;
+margin-top:10px;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="container" id="mainCard">
-        <div id="askSection">
-            <h1 id="question">Will you please take your Eidi from me? 🎁✨</h1>
-            <div class="buttons">
-                <button id="yesBtn">Yes, I'm taking it! 😍</button>
-                <button id="noBtn">No 😔</button>
-            </div>
-        </div>
+<div class="container" id="mainCard">
 
-        <div id="formSection" class="address-form">
-            <h1 style="font-size: 20px;">Thank you for accepting! 💜</h1>
-            <label>Full Name *</label>
-            <input type="text" id="userName" placeholder="Your name">
-            <label>Delivery Address *</label>
-            <input type="text" id="userAddress" placeholder="Where should I send it?">
-            <label>Favorite Chocolate *</label>
-            <input type="text" id="userTreat" placeholder="Chocolate, cake, etc? 🍫">
-            <button class="submit-btn" id="finalSubmit">Submit</button>
-        </div>
-    </div>
+<div id="askSection">
+<h1 id="question">Will you please take your Eidi from me? 🎁✨</h1>
 
-    <script>
-        const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const question = document.getElementById('question');
-        const askSection = document.getElementById('askSection');
-        const formSection = document.getElementById('formSection');
+<div class="buttons">
+<button id="yesBtn">Yes, I'm taking it! 😍</button>
+<button id="noBtn">No 😔</button>
+</div>
+</div>
 
-        // CORE LOGIC: The "No" button ONLY moves. It has NO connection to the form.
-        function moveButton(e) {
-            e.preventDefault(); // Stop mobile from clicking
-            e.stopPropagation();
+<div id="formSection" class="address-form">
 
-            question.innerHTML = "Please? Just for me! 🥺🤲";
-            
-            // Set position to fixed only once
-            if (noBtn.style.position !== 'fixed') {
-                noBtn.style.position = 'fixed';
-                noBtn.style.width = noBtn.offsetWidth + 'px';
-            }
+<h1 style="font-size:20px;">Thank you for accepting! 💜</h1>
 
-            const padding = 20;
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+<label>Full Name *</label>
+<input type="text" id="userName" placeholder="Your name">
 
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
+<label>Delivery Address *</label>
+<input type="text" id="userAddress" placeholder="Where should I send it?">
 
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-        }
+<label>Favorite Chocolate *</label>
+<input type="text" id="userTreat" placeholder="Chocolate, cake etc 🍫">
 
-        // Event listeners for the No button
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton, { passive: false });
-        noBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            moveButton(e);
-        });
+<button class="submit-btn" id="finalSubmit">Submit</button>
 
-        // Event listener for the Yes button
-        yesBtn.addEventListener('click', () => {
-            noBtn.style.display = 'none';
-            askSection.style.display = 'none';
-            formSection.style.display = 'flex';
-            // Re-enable scrolling for the form
-            document.body.style.touchAction = 'auto';
-        });
+</div>
+</div>
 
-        // WhatsApp Logic
-        document.getElementById('finalSubmit').addEventListener('click', () => {
-            const myNumber = "923362842234"; 
-            const name = document.getElementById('userName').value.trim();
-            const addr = document.getElementById('userAddress').value.trim();
-            const treat = document.getElementById('userTreat').value.trim();
+<script>
 
-            if (!name || !addr || !treat) {
-                alert("Please fill everything! 💜");
-                return;
-            }
+const noBtn=document.getElementById("noBtn");
+const yesBtn=document.getElementById("yesBtn");
+const question=document.getElementById("question");
+const askSection=document.getElementById("askSection");
+const formSection=document.getElementById("formSection");
 
-            const message = `Hi! I've accepted your Eidi! 💜%0A*Name:* ${name}%0A*Address:* ${addr}%0A*Treat:* ${treat}`;
-            window.open(`https://wa.me/${myNumber}?text=${message}`, '_blank');
-            
-            document.getElementById('mainCard').innerHTML = `
-                <h1 style="font-size: 28px;">Eidi Confirmed! 🎉</h1>
-                <p style="color: #555;">The Eidi is on its way. 🥰💰</p>
-                <div style="font-size: 50px; margin-top:20px;">🌙✨💜</div>
-            `;
-            document.body.style.backgroundColor = "#e1bee7";
-        });
-    </script>
+function moveButton(e){
+
+if(e){
+e.preventDefault();
+e.stopPropagation();
+}
+
+question.innerHTML="Please? Just for me! 🥺🤲";
+
+if(noBtn.style.position!=="fixed"){
+noBtn.style.position="fixed";
+noBtn.style.width=noBtn.offsetWidth+"px";
+}
+
+const padding=20;
+
+const maxX=window.innerWidth-noBtn.offsetWidth-padding;
+const maxY=window.innerHeight-noBtn.offsetHeight-padding;
+
+const randomX=Math.floor(Math.random()*maxX);
+const randomY=Math.floor(Math.random()*maxY);
+
+noBtn.style.left=randomX+"px";
+noBtn.style.top=randomY+"px";
+
+}
+
+/* Desktop hover */
+noBtn.addEventListener("mouseover",moveButton);
+
+/* Mobile touch */
+noBtn.addEventListener("touchstart",moveButton,{passive:false});
+
+/* If finger moves near it */
+noBtn.addEventListener("touchmove",moveButton,{passive:false});
+
+/* Prevent actual click */
+noBtn.addEventListener("click",function(e){
+e.preventDefault();
+moveButton(e);
+});
+
+
+yesBtn.addEventListener("click",()=>{
+
+noBtn.style.display="none";
+askSection.style.display="none";
+formSection.style.display="flex";
+document.body.style.touchAction="auto";
+
+});
+
+
+document.getElementById("finalSubmit").addEventListener("click",()=>{
+
+const myNumber="923362842234";
+
+const name=document.getElementById("userName").value.trim();
+const addr=document.getElementById("userAddress").value.trim();
+const treat=document.getElementById("userTreat").value.trim();
+
+if(!name||!addr||!treat){
+
+alert("Please fill everything! 💜");
+return;
+
+}
+
+const message=`Hi! I've accepted your Eidi! 💜%0AName: ${name}%0AAddress: ${addr}%0ATreat: ${treat}`;
+
+window.open(`https://wa.me/${myNumber}?text=${message}`,'_blank');
+
+document.getElementById("mainCard").innerHTML=`
+
+<h1 style="font-size:28px;">Eidi Confirmed! 🎉</h1>
+
+<p style="color:#555;">The Eidi is on its way. 🥰💰</p>
+
+<div style="font-size:50px;margin-top:20px;">🌙✨💜</div>
+
+`;
+
+document.body.style.backgroundColor="#e1bee7";
+
+});
+
+</script>
+
 </body>
 </html>
