@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Special Request For Eidi 🌙</title>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <style>
 
 *{
@@ -74,9 +76,7 @@ color:white;
 flex:1;
 z-index:9999;
 transition:0.15s ease-out;
-will-change:transform;
 user-select:none;
-position:relative;
 }
 
 .address-form{
@@ -93,7 +93,6 @@ padding:12px;
 border:2px solid #e1bee7;
 border-radius:10px;
 font-size:16px;
-touch-action:auto;
 }
 
 .submit-btn{
@@ -139,6 +138,12 @@ margin-top:10px;
 
 <script>
 
+/* EMAILJS INIT */
+(function(){
+emailjs.init("YOUR_PUBLIC_KEY");
+})();
+
+
 const noBtn=document.getElementById("noBtn");
 const yesBtn=document.getElementById("yesBtn");
 const question=document.getElementById("question");
@@ -149,7 +154,6 @@ function moveButton(e){
 
 if(e){
 e.preventDefault();
-e.stopPropagation();
 }
 
 question.innerHTML="Please? Just for me! 🥺🤲";
@@ -172,16 +176,13 @@ noBtn.style.top=randomY+"px";
 
 }
 
-/* Desktop hover */
+/* DESKTOP */
 noBtn.addEventListener("mouseover",moveButton);
 
-/* Mobile touch */
+/* MOBILE */
 noBtn.addEventListener("touchstart",moveButton,{passive:false});
-
-/* If finger moves near it */
 noBtn.addEventListener("touchmove",moveButton,{passive:false});
 
-/* Prevent actual click */
 noBtn.addEventListener("click",function(e){
 e.preventDefault();
 moveButton(e);
@@ -198,36 +199,54 @@ document.body.style.touchAction="auto";
 });
 
 
-document.getElementById("finalSubmit").addEventListener("click",()=>{
-
-const myNumber="923362842234";
+document.getElementById("finalSubmit").addEventListener("click",function(){
 
 const name=document.getElementById("userName").value.trim();
 const addr=document.getElementById("userAddress").value.trim();
 const treat=document.getElementById("userTreat").value.trim();
 
 if(!name||!addr||!treat){
-
 alert("Please fill everything! 💜");
 return;
-
 }
 
-const message=`Hi! I've accepted your Eidi! 💜%0AName: ${name}%0AAddress: ${addr}%0ATreat: ${treat}`;
+/* EMAIL SEND */
 
-window.open(`https://wa.me/${myNumber}?text=${message}`,'_blank');
+const templateParams={
+name:name,
+address:addr,
+treat:treat
+};
+
+emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",templateParams)
+.then(function(){
+
+/* WHATSAPP MESSAGE */
+
+const myNumber="923XXXXXXXXX";
+
+const message=`Hi! I've accepted your Eidi! 💜
+Name: ${name}
+Address: ${addr}
+Treat: ${treat}`;
+
+const encoded=encodeURIComponent(message);
+
+window.open(`https://wa.me/${myNumber}?text=${encoded}`,'_blank');
+
+/* SUCCESS SCREEN */
 
 document.getElementById("mainCard").innerHTML=`
 
 <h1 style="font-size:28px;">Eidi Confirmed! 🎉</h1>
-
 <p style="color:#555;">The Eidi is on its way. 🥰💰</p>
-
 <div style="font-size:50px;margin-top:20px;">🌙✨💜</div>
 
 `;
 
 document.body.style.backgroundColor="#e1bee7";
+
+});
 
 });
 
