@@ -7,7 +7,7 @@
     <style>
         * {
             box-sizing: border-box;
-            touch-action: none; /* Disables browser zooming/panning to let JS handle touch better */
+            -webkit-tap-highlight-color: transparent; /* Removes the blue flash on mobile */
         }
 
         body {
@@ -20,6 +20,7 @@
             margin: 0;
             overflow: hidden;
             width: 100vw;
+            touch-action: none; /* Prevents zooming/scrolling which interferes with button movement */
         }
 
         .container {
@@ -58,15 +59,16 @@
             background-color: #9c27b0;
             color: white;
             flex: 1;
-            touch-action: auto; /* Allow clicking this one! */
+            touch-action: auto;
         }
 
         #noBtn {
             background-color: #9575cd;
             color: white;
             flex: 1;
-            transition: all 0.2s ease;
             z-index: 9999;
+            transition: 0.1s ease-out;
+            will-change: transform;
             user-select: none;
         }
 
@@ -87,7 +89,7 @@
             touch-action: auto;
         }
 
-        .submit-btn { background-color: #6a1b9a; color: white; width: 100%; touch-action: auto; }
+        .submit-btn { background-color: #6a1b9a; color: white; width: 100%; margin-top: 10px;}
     </style>
 </head>
 <body>
@@ -96,7 +98,7 @@
         <div id="askSection">
             <h1 id="question">Will you please take your Eidi from me? 🎁✨</h1>
             <div class="buttons">
-                <button id="yesBtn" onclick="showForm()">Yes, I'm taking it! 😍</button>
+                <button id="yesBtn">Yes, I'm taking it! 😍</button>
                 <button id="noBtn">No 😔</button>
             </div>
         </div>
@@ -109,30 +111,33 @@
             <input type="text" id="userAddress" placeholder="Where should I send it?">
             <label>Favorite Chocolate *</label>
             <input type="text" id="userTreat" placeholder="Chocolate, cake, etc? 🍫">
-            <button class="submit-btn" onclick="sendWhatsApp()">Submit</button>
+            <button class="submit-btn" id="finalSubmit">Submit</button>
         </div>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
         const question = document.getElementById('question');
+        const askSection = document.getElementById('askSection');
+        const formSection = document.getElementById('formSection');
 
-        // Function to move the button
+        // CORE LOGIC: The "No" button ONLY moves. It has NO connection to the form.
         function moveButton(e) {
-            // Stop the click/tap from happening
-            e.preventDefault();
+            e.preventDefault(); // Stop mobile from clicking
             e.stopPropagation();
 
             question.innerHTML = "Please? Just for me! 🥺🤲";
             
-            noBtn.style.position = 'fixed';
-            
-            const btnWidth = noBtn.offsetWidth;
-            const btnHeight = noBtn.offsetHeight;
-            
-            // Random position within viewport
-            const maxX = window.innerWidth - btnWidth - 20;
-            const maxY = window.innerHeight - btnHeight - 20;
+            // Set position to fixed only once
+            if (noBtn.style.position !== 'fixed') {
+                noBtn.style.position = 'fixed';
+                noBtn.style.width = noBtn.offsetWidth + 'px';
+            }
+
+            const padding = 20;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
@@ -141,28 +146,25 @@
             noBtn.style.top = randomY + 'px';
         }
 
-        // Event Listeners
-        // 1. Desktop Hover
+        // Event listeners for the No button
         noBtn.addEventListener('mouseover', moveButton);
-        
-        // 2. Mobile Touch (Start)
-        noBtn.addEventListener('touchstart', moveButton, {passive: false});
-
-        // 3. Fallback Click (to ensure it NEVER triggers anything else)
+        noBtn.addEventListener('touchstart', moveButton, { passive: false });
         noBtn.addEventListener('click', (e) => {
             e.preventDefault();
             moveButton(e);
         });
 
-        function showForm() {
+        // Event listener for the Yes button
+        yesBtn.addEventListener('click', () => {
             noBtn.style.display = 'none';
-            document.getElementById('askSection').style.display = 'none';
-            document.getElementById('formSection').style.display = 'flex';
-            // Re-enable touch for the form fields
-            document.querySelectorAll('input, button').forEach(el => el.style.touchAction = 'auto');
-        }
+            askSection.style.display = 'none';
+            formSection.style.display = 'flex';
+            // Re-enable scrolling for the form
+            document.body.style.touchAction = 'auto';
+        });
 
-        function sendWhatsApp() {
+        // WhatsApp Logic
+        document.getElementById('finalSubmit').addEventListener('click', () => {
             const myNumber = "923362842234"; 
             const name = document.getElementById('userName').value.trim();
             const addr = document.getElementById('userAddress').value.trim();
@@ -177,11 +179,12 @@
             window.open(`https://wa.me/${myNumber}?text=${message}`, '_blank');
             
             document.getElementById('mainCard').innerHTML = `
-                <h1>Eidi Confirmed! 🎉</h1>
-                <p>The Eidi is on its way. 🥰💰</p>
-                <div style="font-size: 50px;">🌙✨💜</div>
+                <h1 style="font-size: 28px;">Eidi Confirmed! 🎉</h1>
+                <p style="color: #555;">The Eidi is on its way. 🥰💰</p>
+                <div style="font-size: 50px; margin-top:20px;">🌙✨💜</div>
             `;
-        }
+            document.body.style.backgroundColor = "#e1bee7";
+        });
     </script>
 </body>
 </html>
