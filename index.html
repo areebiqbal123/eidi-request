@@ -7,7 +7,7 @@
     <style>
         * {
             box-sizing: border-box;
-            touch-action: manipulation;
+            touch-action: none; /* Disables browser zooming/panning to let JS handle touch better */
         }
 
         body {
@@ -19,6 +19,7 @@
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
+            width: 100vw;
         }
 
         .container {
@@ -29,25 +30,19 @@
             box-shadow: 0 10px 25px rgba(123, 31, 162, 0.2);
             width: 85%;
             max-width: 400px;
-            transition: all 0.4s ease;
             position: relative;
             z-index: 10;
         }
 
-        h1 {
-            color: #7b1fa2;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
+        h1 { color: #7b1fa2; margin-bottom: 20px; font-size: 1.5rem; }
 
         .buttons {
             display: flex;
-            flex-direction: row;
             justify-content: center;
             align-items: center;
             gap: 15px;
             margin-top: 10px;
-            min-height: 50px;
+            min-height: 60px;
         }
 
         button {
@@ -57,24 +52,22 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            white-space: nowrap;
         }
 
         #yesBtn {
             background-color: #9c27b0;
             color: white;
-            box-shadow: 0 4px 10px rgba(156, 39, 176, 0.3);
             flex: 1;
+            touch-action: auto; /* Allow clicking this one! */
         }
 
         #noBtn {
             background-color: #9575cd;
             color: white;
-            position: relative; 
-            z-index: 999;
             flex: 1;
-            /* Added transition for a smoother 'run away' effect */
-            transition: left 0.2s ease, top 0.2s ease;
+            transition: all 0.2s ease;
+            z-index: 9999;
+            user-select: none;
         }
 
         .address-form {
@@ -90,28 +83,11 @@
             padding: 12px;
             border: 2px solid #e1bee7;
             border-radius: 10px;
-            outline: none;
             font-size: 16px;
+            touch-action: auto;
         }
 
-        input:focus { border-color: #9c27b0; }
-
-        label {
-            color: #7b1fa2;
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .required-star { color: #f44336; }
-
-        .submit-btn {
-            background-color: #6a1b9a;
-            color: white;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .finish-title { font-size: 28px !important; }
+        .submit-btn { background-color: #6a1b9a; color: white; width: 100%; touch-action: auto; }
     </style>
 </head>
 <body>
@@ -121,90 +97,90 @@
             <h1 id="question">Will you please take your Eidi from me? 🎁✨</h1>
             <div class="buttons">
                 <button id="yesBtn" onclick="showForm()">Yes, I'm taking it! 😍</button>
-                <button id="noBtn" onmouseover="moveButton(event)" ontouchstart="moveButton(event)">No 😔</button>
+                <button id="noBtn">No 😔</button>
             </div>
         </div>
 
         <div id="formSection" class="address-form">
             <h1 style="font-size: 20px;">Thank you for accepting! 💜</h1>
-            <p style="text-align:center; color: #555; font-size: 14px;">Please fill every field below:</p>
-            
-            <label>Full Name <span class="required-star">*</span></label>
-            <input type="text" id="userName" placeholder="Your name" required>
-            
-            <label>Delivery Address <span class="required-star">*</span></label>
-            <input type="text" id="userAddress" placeholder="Where should I send it?" required>
-            
-            <label>Favorite Chocolate <span class="required-star">*</span></label>
-            <input type="text" id="userTreat" placeholder="Chocolate, cake, etc? 🍫" required>
-            
+            <label>Full Name *</label>
+            <input type="text" id="userName" placeholder="Your name">
+            <label>Delivery Address *</label>
+            <input type="text" id="userAddress" placeholder="Where should I send it?">
+            <label>Favorite Chocolate *</label>
+            <input type="text" id="userTreat" placeholder="Chocolate, cake, etc? 🍫">
             <button class="submit-btn" onclick="sendWhatsApp()">Submit</button>
         </div>
     </div>
 
     <script>
-        function moveButton(event) {
-            // This prevents the 'click' event from firing after the touch
-            if (event && event.type === 'touchstart') {
-                event.preventDefault();
-            }
+        const noBtn = document.getElementById('noBtn');
+        const question = document.getElementById('question');
 
-            const noBtn = document.getElementById('noBtn');
-            const question = document.getElementById('question');
+        // Function to move the button
+        function moveButton(e) {
+            // Stop the click/tap from happening
+            e.preventDefault();
+            e.stopPropagation();
+
             question.innerHTML = "Please? Just for me! 🥺🤲";
             
             noBtn.style.position = 'fixed';
-            noBtn.style.flex = 'none';
-
+            
             const btnWidth = noBtn.offsetWidth;
             const btnHeight = noBtn.offsetHeight;
             
-            // Padding to ensure button stays away from the very edges
-            const padding = 20;
-            const maxX = window.innerWidth - btnWidth - padding;
-            const maxY = window.innerHeight - btnHeight - padding;
+            // Random position within viewport
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
 
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
 
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
         }
 
+        // Event Listeners
+        // 1. Desktop Hover
+        noBtn.addEventListener('mouseover', moveButton);
+        
+        // 2. Mobile Touch (Start)
+        noBtn.addEventListener('touchstart', moveButton, {passive: false});
+
+        // 3. Fallback Click (to ensure it NEVER triggers anything else)
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton(e);
+        });
+
         function showForm() {
-            const noBtn = document.getElementById('noBtn');
-            if(noBtn) noBtn.style.display = 'none';
+            noBtn.style.display = 'none';
             document.getElementById('askSection').style.display = 'none';
             document.getElementById('formSection').style.display = 'flex';
+            // Re-enable touch for the form fields
+            document.querySelectorAll('input, button').forEach(el => el.style.touchAction = 'auto');
         }
 
         function sendWhatsApp() {
-            // REMEMBER TO CHANGE THIS TO YOUR ACTUAL NUMBER
             const myNumber = "923362842234"; 
-            
             const name = document.getElementById('userName').value.trim();
             const addr = document.getElementById('userAddress').value.trim();
             const treat = document.getElementById('userTreat').value.trim();
 
             if (!name || !addr || !treat) {
-                alert("All fields are required! Please don't leave anything blank 💜");
+                alert("Please fill everything! 💜");
                 return;
             }
 
-            const message = `Hi! I've accepted your Eidi! 💜%0A%0A*Name:* ${name}%0A*Address:* ${addr}%0A*Treat:* ${treat}`;
+            const message = `Hi! I've accepted your Eidi! 💜%0A*Name:* ${name}%0A*Address:* ${addr}%0A*Treat:* ${treat}`;
             window.open(`https://wa.me/${myNumber}?text=${message}`, '_blank');
             
-            finish();
-        }
-
-        function finish() {
-            const card = document.getElementById('mainCard');
-            card.innerHTML = `
-                <h1 class="finish-title">Eidi Confirmed! 🎉</h1>
-                <p style="font-size: 16px; color: #555;">The Eidi is on its way. 🥰💰</p>
-                <div style="font-size: 50px; margin-top:20px;">🌙✨💜</div>
+            document.getElementById('mainCard').innerHTML = `
+                <h1>Eidi Confirmed! 🎉</h1>
+                <p>The Eidi is on its way. 🥰💰</p>
+                <div style="font-size: 50px;">🌙✨💜</div>
             `;
-            document.body.style.backgroundColor = "#e1bee7";
         }
     </script>
 </body>
